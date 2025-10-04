@@ -1,0 +1,6 @@
+body { background:#f8f9fa; }
+.card .meta { font-size:0.9rem; }
+.badge-active { background:#0d6efd; color:white; }
+.badge-maintained { background:#20c997; color:white; }
+.badge-stale { background:#6c757d; color:white; }
+.small-muted { font-size:0.85rem; color:#6c757d; }
