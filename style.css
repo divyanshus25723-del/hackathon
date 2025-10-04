@@ -1,6 +1,144 @@
-body { background:#f8f9fa; }
-.card .meta { font-size:0.9rem; }
-.badge-active { background:#0d6efd; color:white; }
-.badge-maintained { background:#20c997; color:white; }
-.badge-stale { background:#6c757d; color:white; }
-.small-muted { font-size:0.85rem; color:#6c757d; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFEBC6 100%);
+  color: #333333;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ========== Container / Layout ========== */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* ========== Header / Nav ========== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #CC7700;
+  letter-spacing: 1px;
+}
+
+.nav-tagline {
+  font-size: 0.9rem;
+  color: #666666;
+}
+
+/* ========== Buttons ========== */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary {
+  background-color: #FFB547;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #FFA22C;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: #6B46C1;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #5A3799;
+  transform: translateY(-2px);
+}
+
+/* ========== Input Field ========== */
+.input-repo {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid #DDDDDD;
+  border-radius: 999px;
+  font-size: 1rem;
+  margin-right: 0.8rem;
+  transition: border-color 0.2s ease;
+}
+
+.input-repo:focus {
+  outline: none;
+  border-color: #FFB547;
+}
+
+/* ========== Milestone Cards ========== */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #FFE4B5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card .message {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333333;
+}
+
+.card .timestamp {
+  font-size: 0.8rem;
+  color: #999999;
+  margin-top: 0.5rem;
+}
+
+.card .actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* ========== Demo Buttons Section ========== */
+.demo-buttons {
+  margin-top: 3rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* ========== Media / Responsive ========== */
+@media (max-width: 640px) {
+  .grid-cards {
+    grid-template-columns: 1fr;
+  }
+}
