@@ -1,58 +1,47 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OSS Discoverability — Simple</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div class="container py-4">
-    <h1 class="mb-3">OSS Discoverability — Simple</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <title>OpenCelebrate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="nav-logo">OpenCelebrate</div>
+        <div class="nav-tagline">Celebrating every contributor</div>
+      </header>
 
-    <form id="search-form" class="row gy-2 gx-2 align-items-end">
-      <div class="col-md-5">
-        <label class="form-label">Keyword</label>
-        <input id="q" class="form-control" placeholder="e.g. cli, image processing, chart" />
-      </div>
-      <div class="col-md-2">
-        <label class="form-label">Language</label>
-        <input id="lang" class="form-control" placeholder="e.g. javascript" />
-      </div>
-      <div class="col-md-2">
-        <label class="form-label">Min stars</label>
-        <input id="stars" class="form-control" type="number" min="0" value="0" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">GitHub Token (optional)</label>
-        <input id="token" class="form-control" placeholder="Paste token to increase rate limits (do not commit)" />
-      </div>
+      <main>
+        <div style="display: flex; align-items: center; margin-top: 1rem;">
+          <input
+            type="text"
+            class="input-repo"
+            id="repo-input"
+            placeholder="Enter repo name, e.g. vercel/next.js"
+          />
+          <button class="btn btn-primary" id="check-btn">Check Milestones</button>
+        </div>
 
-      <div class="col-12">
-        <button id="search-btn" class="btn btn-primary">Search</button>
-        <button id="clear-btn" type="button" class="btn btn-outline-secondary">Clear</button>
-        <small class="text-muted ms-3">Results per page: 10</small>
-      </div>
-    </form>
+        <section class="grid-cards" id="cards-section">
+          <!-- Example card; you’ll dynamically render many -->
+          <div class="card">
+            <div class="message">🎉 Sample milestone achieved!</div>
+            <div class="timestamp">Just now</div>
+            <div class="actions">
+              <button class="btn btn-secondary share-btn">Share on LinkedIn</button>
+              <button class="btn btn-primary post-btn">Post to Discord</button>
+            </div>
+          </div>
+        </section>
 
-    <hr/>
-
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <div id="status" class="text-muted">Enter search and press Search.</div>
-      <div>
-        <button id="prevBtn" class="btn btn-sm btn-outline-primary me-2" disabled>Prev</button>
-        <button id="nextBtn" class="btn btn-sm btn-outline-primary" disabled>Next</button>
-      </div>
+        <div class="demo-buttons" id="demo-buttons">
+          <button class="btn btn-primary" id="demo-add">Add Demo Milestone</button>
+        </div>
+      </main>
     </div>
 
-    <div id="results" class="row g-3"></div>
-
-    <footer class="mt-4 text-muted small">
-      Tip: if you hit rate limits, add a GitHub personal access token (no scopes required). Do NOT commit the token.
-    </footer>
-  </div>
-
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
