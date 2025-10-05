@@ -1,1 +1,44 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.card {
+  border: none;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-text {
+  color: #555;
+}
+
+.small-muted {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Health badge (for future use) */
+.badge-active {
+  background-color: #0d6efd;
+  color: #fff;
+}
+.badge-maintained {
+  background-color: #20c997;
+  color: #fff;
+}
+.badge-stale {
+  background-color: #6c757d;
+  color: #fff;
+}
+#bg-light{
+    background-image: url(https://sdmntpraustraliaeast.oaiusercontent.com/files/00000000-bd88-61fa-b834-004cbc8f41f4/raw?se=2025-10-05T01%3A27%3A46Z&sp=r&sv=2024-08-04&sr=b&scid=9b0d03b0-48c0-5907-8e08-eea2e9bb7f2a&skoid=f8b66c09-1aa0-4801-9884-173c5cef2b8c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-10-04T22%3A22%3A49Z&ske=2025-10-05T22%3A22%3A49Z&sks=b&skv=2024-08-04&sig=Uoy8Dj5J4/wRmHvmyam2WR06TEYGrN1LcEShUJzU2ck%3D);
+} 
 
