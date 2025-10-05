@@ -1,4 +1,47 @@
-// app.js - minimal logic to query GitHub search and render cards
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.card {
+  border: none;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-text {
+  color: #555;
+}
+
+.small-muted {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Health badge (for future use) */
+.badge-active {
+  background-color: #0d6efd;
+  color: #fff;
+}
+.badge-maintained {
+  background-color: #20c997;
+  color: #fff;
+}
+.badge-stale {
+  background-color: #6c757d;
+  color: #fff;
+}
+app.js
+js
+Copy code
+// app.js — logic to query GitHub and render results
 
 const resultsEl = document.getElementById('results');
 const statusEl = document.getElementById('status');
@@ -13,7 +56,6 @@ const clearBtn = document.getElementById('clear-btn');
 
 let currentPage = 1;
 const perPage = 10;
-let lastQuery = '';
 
 searchForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -33,86 +75,99 @@ clearBtn.addEventListener('click', () => {
 });
 
 prevBtn.addEventListener('click', async () => {
-  if (currentPage > 1) { currentPage--; await doSearch(); }
+  if (currentPage > 1) {
+    currentPage--;
+    await doSearch();
+  }
 });
+
 nextBtn.addEventListener('click', async () => {
-  currentPage++; await doSearch();
+  currentPage++;
+  await doSearch();
 });
 
 function buildQuery() {
-  const q = [];
+  const parts = [];
   const kw = qInput.value.trim();
-  if (kw) q.push(kw);
+  if (kw) parts.push(kw);
   const lang = langInput.value.trim();
-  if (lang) q.push(`language:${lang}`);
-  const stars = parseInt(starsInput.value || 0, 10);
-  if (stars > 0) q.push(`stars:>=${stars}`);
-  const qstr = q.join(' ');
-  lastQuery = qstr || 'stars:>0'; // fallback
-  return encodeURIComponent(lastQuery);
+  if (lang) parts.push(`language:${lang}`);
+  const stars = parseInt(starsInput.value || '0', 10);
+  if (stars > 0) parts.push(`stars:>=${stars}`);
+  const qstr = parts.join(' ');
+  return encodeURIComponent(qstr || 'stars:>0');
 }
 
 async function doSearch() {
   const q = buildQuery();
   const url = `https://api.github.com/search/repositories?q=${q}&sort=best-match&order=desc&per_page=${perPage}&page=${currentPage}`;
-  statusEl.textContent = `Searching (page ${currentPage})...`;
+  
+  statusEl.textContent = `Searching… (page ${currentPage})`;
   resultsEl.innerHTML = '';
+
   try {
     const headers = {};
     const token = tokenInput.value.trim();
-    if (token) headers['Authorization'] = `token ${token}`;
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
 
     const res = await fetch(url, { headers });
     if (!res.ok) {
-      const txt = await res.text();
-      statusEl.textContent = `GitHub error: ${res.status} ${res.statusText} — ${txt}`;
+      const errText = await res.text();
+      statusEl.textContent = `GitHub error: ${res.status} — ${res.statusText}`;
+      console.error('GitHub error details:', errText);
       return;
     }
     const data = await res.json();
     renderResults(data);
   } catch (err) {
-    console.error(err);
-    statusEl.textContent = 'Network error — check console.';
+    console.error('Network or fetch error:', err);
+    statusEl.textContent = 'Network error, check console.';
   }
 }
 
 function renderResults(data) {
   if (!data || !data.items || data.items.length === 0) {
-    statusEl.textContent = 'No results.';
-    prevBtn.disabled = currentPage <= 1;
+    statusEl.textContent = 'No results found.';
+    prevBtn.disabled = (currentPage <= 1);
     nextBtn.disabled = true;
     return;
   }
 
-  statusEl.textContent = `Showing ${data.items.length} results (approx ${data.total_count} total).`;
+  statusEl.textContent = `Showing ${data.items.length} results (approx ${data.total_count})`;
   resultsEl.innerHTML = '';
-  data.items.forEach(repo => resultsEl.appendChild(repoCard(repo)));
-  prevBtn.disabled = currentPage <= 1;
-  nextBtn.disabled = data.items.length < perPage;
+  data.items.forEach(repo => {
+    resultsEl.appendChild(createRepoCard(repo));
+  });
+
+  prevBtn.disabled = (currentPage <= 1);
+  nextBtn.disabled = (data.items.length < perPage);
 }
 
-function repoCard(repo) {
+function createRepoCard(repo) {
   const col = document.createElement('div');
   col.className = 'col-12 col-md-6 col-lg-4';
 
   const card = document.createElement('div');
   card.className = 'card h-100 shadow-sm';
+
   const body = document.createElement('div');
   body.className = 'card-body d-flex flex-column';
 
+  // Title + link
   const title = document.createElement('h5');
   title.className = 'card-title';
-  title.innerHTML = `<a href="${repo.html_url}" target="_blank" rel="noopener">${repo.full_name}</a>`;
+  title.innerHTML = `<a href="${repo.html_url}" target="_blank">${repo.full_name}</a>`;
 
+  // Description
   const desc = document.createElement('p');
-  desc.className = 'card-text small-muted';
+  desc.className = 'card-text';
   desc.textContent = repo.description || '—';
 
-  const meta = document.createElement('div');
-  meta.className = 'meta mt-auto d-flex flex-column gap-2';
-
+  // Stats row
   const statsRow = document.createElement('div');
-  statsRow.className = 'd-flex flex-wrap gap-2 align-items-center';
+  statsRow.className = 'd-flex flex-wrap gap-2 align-items-center mb-2';
   statsRow.innerHTML = `
     <span class="badge bg-secondary">★ ${repo.stargazers_count}</span>
     <span class="badge bg-secondary">🍴 ${repo.forks_count}</span>
@@ -120,28 +175,29 @@ function repoCard(repo) {
     <span class="small-muted ms-2">Last push: ${formatDate(repo.pushed_at)}</span>
   `;
 
+  // Health
   const health = computeHealth(repo);
   const healthRow = document.createElement('div');
-  healthRow.className = 'mt-2';
+  healthRow.className = 'mb-2';
   healthRow.innerHTML = `
     <div class="d-flex align-items-center gap-2">
       <div>Health:</div>
-      <div class="progress flex-grow-1" style="height:10px">
-        <div class="progress-bar" role="progressbar" style="width:${health.score}%;" aria-valuenow="${health.score}" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress flex-grow-1" style="height: 10px;">
+        <div class="progress-bar" role="progressbar" style="width: ${health.score}%;"></div>
       </div>
       <div class="ms-2 small-muted">${health.label}</div>
     </div>
   `;
 
+  // Buttons
   const actions = document.createElement('div');
-  actions.className = 'mt-3 d-flex gap-2';
-
+  actions.className = 'mt-auto d-flex gap-2';
   const gfiBtn = document.createElement('button');
-  gfiBtn.className = 'btn btn-outline-primary btn-sm';
-  gfiBtn.textContent = 'Check good-first-issues';
+  gfiBtn.className = 'btn btn-sm btn-outline-primary';
+  gfiBtn.textContent = 'Check good first issues';
   gfiBtn.onclick = async () => {
     gfiBtn.disabled = true;
-    gfiBtn.textContent = 'Checking...';
+    gfiBtn.textContent = 'Checking…';
     const count = await fetchGoodFirstIssues(repo.full_name);
     gfiBtn.textContent = `Good first issues: ${count}`;
     gfiBtn.disabled = false;
@@ -151,19 +207,17 @@ function repoCard(repo) {
   openIssuesLink.className = 'btn btn-sm btn-outline-secondary';
   openIssuesLink.href = `${repo.html_url}/issues`;
   openIssuesLink.target = '_blank';
-  openIssuesLink.rel = 'noopener';
-  openIssuesLink.textContent = 'Open issues';
+  openIssuesLink.textContent = 'View issues';
 
   actions.appendChild(gfiBtn);
   actions.appendChild(openIssuesLink);
 
-  meta.appendChild(statsRow);
-  meta.appendChild(healthRow);
-  meta.appendChild(actions);
-
+  // Assemble card
   body.appendChild(title);
   body.appendChild(desc);
-  body.appendChild(meta);
+  body.appendChild(statsRow);
+  body.appendChild(healthRow);
+  body.appendChild(actions);
   card.appendChild(body);
   col.appendChild(card);
   return col;
@@ -178,24 +232,28 @@ function formatDate(iso) {
 function computeHealth(repo) {
   const stars = repo.stargazers_count || 0;
   let score = Math.min(70, Math.round(stars / 10));
-  const pushed = repo.pushed_at ? new Date(repo.pushed_at) : null;
-  const now = new Date();
-  let label = 'Unknown';
-  if (pushed) {
-    const days = Math.round((now - pushed) / (1000 * 60 * 60 * 24));
-    if (days <= 30) { score += 20; label = 'Active'; }
-    else if (days <= 180) { score += 10; label = 'Maintained'; }
-    else { label = 'Stale'; }
+  if (repo.pushed_at) {
+    const pushed = new Date(repo.pushed_at);
+    const now = new Date();
+    const diffDays = Math.round((now - pushed) / (1000 * 60 * 60 * 24));
+    if (diffDays <= 30) {
+      score += 20;
+      return { score: Math.min(score, 100), label: 'Active' };
+    } else if (diffDays <= 180) {
+      score += 10;
+      return { score: Math.min(score, 100), label: 'Maintained' };
+    }
   }
-  score = Math.max(5, Math.min(100, score));
-  return { score, label };
+  return { score: Math.max(score, 5), label: 'Stale' };
 }
 
 async function fetchGoodFirstIssues(fullName) {
   try {
     const token = tokenInput.value.trim();
     const headers = {};
-    if (token) headers['Authorization'] = `token ${token}`;
+    if (token) {
+      headers['Authorization'] = `token ${token}`;
+    }
     const q = encodeURIComponent(`repo:${fullName} label:"good first issue" state:open`);
     const url = `https://api.github.com/search/issues?q=${q}&per_page=1`;
     const res = await fetch(url, { headers });
@@ -206,7 +264,7 @@ async function fetchGoodFirstIssues(fullName) {
     const data = await res.json();
     return data.total_count || 0;
   } catch (err) {
-    console.error(err);
+    console.error('Error in fetchGoodFirstIssues:', err);
     return 'err';
   }
 }
