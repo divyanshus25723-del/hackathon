@@ -1,58 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OSS Discoverability — Simple</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OSS Discoverability Engine</title>
+
+  <!-- Bootstrap CSS for quick styling -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Your custom styles -->
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="container py-4">
-    <h1 class="mb-3">OSS Discoverability — Simple</h1>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#">OSS Discoverability</a>
+    </div>
+  </nav>
 
-    <form id="search-form" class="row gy-2 gx-2 align-items-end">
-      <div class="col-md-5">
-        <label class="form-label">Keyword</label>
-        <input id="q" class="form-control" placeholder="e.g. cli, image processing, chart" />
-      </div>
-      <div class="col-md-2">
-        <label class="form-label">Language</label>
-        <input id="lang" class="form-control" placeholder="e.g. javascript" />
-      </div>
-      <div class="col-md-2">
-        <label class="form-label">Min stars</label>
-        <input id="stars" class="form-control" type="number" min="0" value="0" />
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">GitHub Token (optional)</label>
-        <input id="token" class="form-control" placeholder="Paste token to increase rate limits (do not commit)" />
-      </div>
-
-      <div class="col-12">
-        <button id="search-btn" class="btn btn-primary">Search</button>
-        <button id="clear-btn" type="button" class="btn btn-outline-secondary">Clear</button>
-        <small class="text-muted ms-3">Results per page: 10</small>
-      </div>
-    </form>
-
-    <hr/>
+  <div class="container mb-5">
+    <div class="card p-4 shadow-sm bg-white mb-4">
+      <h4 class="mb-3">Find Open-Source Projects</h4>
+      <form id="search-form" class="row g-3">
+        <div class="col-md-4">
+          <label for="q" class="form-label">Keyword</label>
+          <input id="q" type="text" class="form-control" placeholder="e.g. chart, cli" />
+        </div>
+        <div class="col-md-2">
+          <label for="lang" class="form-label">Language</label>
+          <input id="lang" type="text" class="form-control" placeholder="e.g. JavaScript" />
+        </div>
+        <div class="col-md-2">
+          <label for="stars" class="form-label">Min Stars</label>
+          <input id="stars" type="number" class="form-control" min="0" value="0" placeholder="0" />
+        </div>
+        <div class="col-md-4">
+          <label for="token" class="form-label">GitHub Token (optional)</label>
+          <input id="token" type="text" class="form-control" placeholder="Paste token to increase rate limits" />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary me-2">Search</button>
+          <button id="clear-btn" type="button" class="btn btn-outline-secondary">Clear</button>
+        </div>
+      </form>
+    </div>
 
     <div class="d-flex justify-content-between align-items-center mb-2">
-      <div id="status" class="text-muted">Enter search and press Search.</div>
+      <div id="status" class="text-muted">Enter search query above to begin.</div>
       <div>
-        <button id="prevBtn" class="btn btn-sm btn-outline-primary me-2" disabled>Prev</button>
-        <button id="nextBtn" class="btn btn-sm btn-outline-primary" disabled>Next</button>
+        <button id="prevBtn" class="btn btn-sm btn-outline-primary me-2" disabled>← Previous</button>
+        <button id="nextBtn" class="btn btn-sm btn-outline-primary" disabled>Next →</button>
       </div>
     </div>
 
-    <div id="results" class="row g-3"></div>
-
-    <footer class="mt-4 text-muted small">
-      Tip: if you hit rate limits, add a GitHub personal access token (no scopes required). Do NOT commit the token.
-    </footer>
+    <div id="results" class="row g-4"></div>
   </div>
-  <div id="results" class="..."></div>
+
+  <footer class="text-center text-muted pb-4">
+    Tip: Add a GitHub token if you hit rate limits. Don’t commit it.  
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>
